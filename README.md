@@ -1,5 +1,5 @@
 # XmlToExcel
-XML形式のメタデータをExcelテーブル形式へ変換する。Convert XML files to Excel table data.
+XML形式のツリー構造データをExcelへ変換する。Convert tree-structure data in XML files to Excel.
 使い方
 bashで
 ```
