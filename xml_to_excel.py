@@ -35,7 +35,7 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
     print('')
     print('Read Element-Define Table')
 
-    dict_path = module.read_define('ElementDefine_ISO.xlsx')
+    dict_path = module.read_define(elem_table)
     table_path = [l for l in module.dict_to_table(dict_path)]
     table_name = [l[0] for l in table_path]
     data_path = pd.DataFrame(table_name)
@@ -52,31 +52,37 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
 
     n = 0
     for xmlfile in xmlfiles:
-        print('.', end='', flush=True)
+        xmlfile0 = xmlfile.split('/')[-1]
+        print(xmlfile0, end=' ', flush=True)
 
         xml = etree.parse(xmlfile)
         root = xml.getroot()
         ns = root.nsmap
 
         table_xml = [l for l in module.read_xml(dict_path, root, ns)]
+
         table_name = [l[0] for l in table_xml]
         data_xml = pd.DataFrame(table_name)
         data_xml = data_xml.astype('str')
         data_xml.mask((data_xml=='nan') | (data_xml=='None'), '', inplace=True)
-        data_xml[xmlfile.split('/')[-1]] = [l[1] for l in table_xml]
-        data_xml.set_index(cols_name, inplace=True)
+
+        list_hash = [l[1] for l in table_xml]
+        data_xml['HASH.NAME'] = list_hash
+
+        data_xml[xmlfile0] = [l[2] for l in table_xml]
 
         if n>0:
-            data = pd.merge(data, data_xml, left_index=True, right_index=True, how='outer')
+            data = pd.merge(data, data_xml, on = cols_name + ['HASH.NAME'], how = 'outer')
         else:
             data = data_xml
 
         n += 1
-        if n%100 == 0:
-            print(n, end='')
+        if n%1000 == 0:
+            print('')
+            print('#' + str(n))
 
     print('')
-
+    data.drop(columns='HASH.NAME', inplace=True)
     data = data.astype('str')
     data.mask((data=='nan') | (data=='None'), None, inplace=True)
 
@@ -85,7 +91,7 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
     print('output: ' + outfile)
 
     outfile = outdir + '/table.xlsx'
-    data.to_excel(outfile)
+    data.to_excel(outfile, index=False)
     print('output: ' + outfile)
 
     print('Finished!')
