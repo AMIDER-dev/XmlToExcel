@@ -8,11 +8,10 @@ XML形式のツリー構造データをExcelへ変換する。Convert tree-struc
 ## 動作確認環境
 python 3.10.11
 # ライブラリ
-fire==0.7.0
-flatten_dict==0.4.2
-lxml==4.9.2
-pandas==2.0.2
-pickle
+fire 0.7.0
+flatten_dict 0.4.2
+lxml 4.9.2
+pandas 2.0.2
 
 ## 入力データ
 ### XMLファイル
@@ -53,8 +52,9 @@ pickle
     </tr>
   </tbody>
 </table>
+
 ## 使い方
-# ヘルプ表示
+### ヘルプ表示
 bashで
 ```
 python xml_to_excel.py --help
@@ -65,3 +65,7 @@ import xml_to_excel
 help(xml_to_excel)
 ```
 
+### examplesの実行方法
+```
+./examples.sh
+```
