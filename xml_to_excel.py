@@ -2,7 +2,6 @@ import os
 import sys
 import fire
 import pandas as pd
-import collections
 from lxml import etree
 import module
 
