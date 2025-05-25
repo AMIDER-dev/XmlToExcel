@@ -1,5 +1,5 @@
 # XmlToExcel
-XML形式のツリー構造データをExcelへ変換する。Convert tree-structure data in XML files to Excel.
+XML形式のツリー構造データをExcelへ変換する。Convert tree-structure data in XML files to Excel. 複数のXMLファイルをExcelテーブルへ統合できる。
 
 - xml_to_excel.py: メインプログラム
 - module.py: サブモジュール
@@ -14,6 +14,45 @@ lxml==4.9.2
 pandas==2.0.2
 pickle
 
+## 入力データ
+### XMLファイル
+### 要素名定義テーブル
+データテーブルの要素名とサンプルXMLの各XPathの対応付けを定義する。要素名の階層構造はスラッシュ（/）で表し、子要素名のXPathの開始タグがサブツリーの起点となる。
+
+<table border="1" cellspacing="0" cellpadding="5">
+  <thead style="background-color:#3f66a7; color:white;">
+    <tr>
+      <th>Element Name</th>
+      <th>XPath</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>要素名A-1</td>
+      <td>パスA-1</td>
+    </tr>
+    <tr>
+      <td>要素名A-2</td>
+      <td>パスA-2</td>
+    </tr>
+    <tr>
+      <td>要素名A-2/要素名A-2-2</td>
+      <td>パスA-2-2（パスA-2の続き）</td>
+    </tr>
+    <tr>
+      <td>…</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>要素名B-1</td>
+      <td>パスB-1</td>
+    </tr>
+    <tr>
+      <td>…</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 ## 使い方
 # ヘルプ表示
 bashで
