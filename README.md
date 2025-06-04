@@ -3,7 +3,7 @@ XML形式のツリー構造データをExcelへ変換する。Convert tree-struc
 
 - xml_to_excel.py: メインプログラム
 - module.py: サブモジュール
-- examples, examples.sh: 使用例
+- examplesフォルダ, examples.sh: 使用例
 
 ## 動作確認環境
 python 3.10.11
