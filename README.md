@@ -81,3 +81,14 @@ help(xml_to_excel)
 ```
 ./examples.sh
 ```
+
+## License
+
+This software is released under the [MIT License](LICENSE).
+
+It also makes use of the following third-party libraries, each of which is distributed under its own open-source license:
+
+- [**fire**](https://github.com/google/python-fire) — Apache License 2.0  
+- [**flatten_dict**](https://github.com/ianlini/flatten-dict) — MIT License  
+- [**lxml**](https://lxml.de/) — BSD-style License  
+- [**pandas**](https://pandas.pydata.org/) — BSD License
