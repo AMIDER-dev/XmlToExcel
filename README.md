@@ -15,7 +15,11 @@ XML形式のツリー構造データをExcelへ変換する。Convert tree-struc
 
 ## 入力データ
 ### XMLファイル
+- examples/xml/metadata1.xml, metadata2.xml
+
 ### 要素名定義テーブル
+- examples/ElementDefine.xlsx
+
 データテーブルの要素名とサンプルXMLの各XPathの対応付けを定義する。要素名の階層構造はスラッシュ（/）で表し、子要素名のXPathの開始タグがサブツリーの起点となる。
 
 <table border="1" cellspacing="0" cellpadding="5">
@@ -53,8 +57,12 @@ XML形式のツリー構造データをExcelへ変換する。Convert tree-struc
   </tbody>
 </table>
 
-## 使い方
-### ヘルプ表示
+## 出力
+- examples/output/table.xlsx: 要素名定義テーブルに従いExcelテーブル形式へ変換したXMLデータ
+- examples/output/table.pkl: Excel化する前のPython PandasデータをPickleで保存したもの
+- examples/output/table_path.xlsx: 要素名定義テーブルを処理の際に整形したものをExcelで保存したもの
+
+## ヘルプ表示
 bashで
 ```
 python xml_to_excel.py --help
