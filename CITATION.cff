@@ -21,7 +21,7 @@ title: "XmlToExcel"
 abstract: >
   XmlToExcel is a software developed as part of the AMIDER project (see references).
 version: 1.0.0
-doi: "10.5281/zenodo.1234"
+doi: "10.5281/zenodo.15590207"
 date-released: 2025-06-03
 url: "https://github.com/AMIDER-dev/XmlToExcel"
   
