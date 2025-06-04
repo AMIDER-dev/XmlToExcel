@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Kozai"
+  given-names: "Masayoshi"
+  orcid: "https://orcid.org/0000-0002-3948-3666"
+title: "XmlToExcel"
+abstract: >
+  XmlToExcel is a software developed as part of the AMIDER project (see references).
+version: 1.0.0
+doi: 10.5281/zenodo.1234
+date-released: 2025-06-03
+url: "https://github.com/AMIDER-dev/XmlToExcel"
+  
+references:
+  - type: webpage
+    title: "AMIDER: Advanced Multidisciplinary Integrated-Database for Exploring new Research"
+    authors:
+      - family-names: "Kozai"
+        given-names: "Masayoshi"
+      - family-names: "Tanaka"
+        given-names: "Yoshimasa"
+      - family-names: "Abe"
+        given-names: "Shuji"
+      - family-names: "Minamiyama"
+        given-names: "Yasuyuki"
+      - family-names: "Shinbori"
+        given-names: "Atsuki"
+   url: "https://amider.rois.ac.jp/"
+    accessed: 2025-06-04
+  
+  - type: article
+    title: "AMIDER: A Multidisciplinary Research Database and Its Application to Promote Open Science"
+    authors:
+      - family-names: "Kozai"
+        given-names: "Masayoshi"
+      - family-names: "Tanaka"
+        given-names: "Yoshimasa"
+      - family-names: "Abe"
+        given-names: "Shuji"
+      - family-names: "Minamiyama"
+        given-names: "Yasuyuki"
+      - family-names: "Shinbori"
+        given-names: "Atsuki"
+      - family-names: "Kadokura"
+        given-names: "Akira"
+    journal: "Data Science Journal"
+    year: 2025
+    doi: "10.5334/dsj-2025-007"
+
