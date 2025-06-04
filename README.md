@@ -73,7 +73,7 @@ import xml_to_excel
 help(xml_to_excel)
 ```
 
-### examplesの実行方法
+## examplesの実行方法
 ```
 ./examples.sh
 ```
