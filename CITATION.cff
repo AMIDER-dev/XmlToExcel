@@ -1,5 +1,4 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
 authors:
 - family-names: "Kozai"
   given-names: "Masayoshi"
@@ -20,7 +19,7 @@ authors:
 title: "XmlToExcel"
 abstract: >
   XmlToExcel is a software developed as part of the AMIDER project (see references).
-version: 1.0.0
+version: 1.0.1
 doi: "10.5281/zenodo.15590207"
 date-released: 2025-06-03
 url: "https://github.com/AMIDER-dev/XmlToExcel"
