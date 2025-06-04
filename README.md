@@ -1,6 +1,6 @@
 [![DOI](https://zenodo.org/badge/988894848.svg)](https://doi.org/10.5281/zenodo.15590207)
 
-Please follow the license when you use this software.
+Please follow the license and cite the DOI when you use this software.
 
 # XmlToExcel
 XML形式のツリー構造データをExcelテーブル形式へ変換する。Convert tree-structure data in XML files to the Excel table structure. 複数のXMLファイルをExcelテーブルへ統合できる。
