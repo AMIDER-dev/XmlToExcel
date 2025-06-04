@@ -9,10 +9,10 @@ def read_define(excelfile):
     dict_path = unflatten(list(dict_tmp.values())[0], splitter='path')
     return dict_path
 
-def read_xml(current_dict, current_node, ns, names=[], h_names=''):
+def read_xml(current_dict, current_node, ns, names=[]):
     if len(current_dict.keys())==1:
         text = current_node.text
-        yield [names, hash(h_names), text]
+        yield [names, text]
     else:
         for child_name, child_dict in current_dict.items():
             if child_name=='XPath':
@@ -24,8 +24,7 @@ def read_xml(current_dict, current_node, ns, names=[], h_names=''):
             child_nodes = current_node.xpath(xpath, namespaces=ns)
 
             for i, child_node in enumerate(child_nodes):
-                yield from read_xml(child_dict, child_node, ns,
-                    names + [child_name], h_names + child_name + '_' + str(i) + '/')
+                yield from read_xml(child_dict, child_node, ns, names + [child_name + '_' + str(i)])
 
 def dict_to_table(current_dict, names=[], path=''):
     if len(current_dict.keys())==1:

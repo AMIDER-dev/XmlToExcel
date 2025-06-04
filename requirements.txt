@@ -1,0 +1,4 @@
+fire==0.7.0
+flatten_dict==0.4.2
+lxml==4.9.2
+pandas==2.0.2

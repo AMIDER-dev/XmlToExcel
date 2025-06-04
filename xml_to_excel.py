@@ -65,13 +65,10 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
         data_xml = data_xml.astype('str')
         data_xml.mask((data_xml=='nan') | (data_xml=='None'), '', inplace=True)
 
-        list_hash = [l[1] for l in table_xml]
-        data_xml['HASH.NAME'] = list_hash
-
-        data_xml[xmlfile0] = [l[2] for l in table_xml]
+        data_xml[xmlfile0] = [l[1] for l in table_xml]
 
         if n>0:
-            data = pd.merge(data, data_xml, on = cols_name + ['HASH.NAME'], how = 'outer')
+            data = pd.merge(data, data_xml, on = cols_name, how = 'outer')
         else:
             data = data_xml
 
@@ -81,9 +78,19 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
             print('#' + str(n))
 
     print('')
-    data.drop(columns='HASH.NAME', inplace=True)
     data = data.astype('str')
     data.mask((data=='nan') | (data=='None'), None, inplace=True)
+
+    for col in cols_name:
+        names_new = []
+        prev = object()
+        for i,name in enumerate(data[col]):
+            if name == prev:
+                names_new += [None]
+            else:
+                names_new += [name.rsplit('_',1)[0]]
+                prev = name
+        data[col] = names_new
 
     outfile = outdir + '/table.pkl'
     module.pickle_dump(data, outfile)
