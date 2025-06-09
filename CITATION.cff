@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+authors:
+- family-names: "Kozai"
+  given-names: "Masayoshi"
+  orcid: "https://orcid.org/0000-0002-3948-3666"
+- family-names: "Tanaka"
+  given-names: "Yoshimasa"
+  orcid: "https://orcid.org/0000-0001-7276-4868"
+- family-names: "Abe"
+  given-names: "Shuji"
+  orcid: "https://orcid.org/0000-0001-8270-0024"
+- family-names: "Minamiyama"
+  given-names: "Yasuyuki"
+  orcid: "https://orcid.org/0000-0002-7280-3342"
+- family-names: "Shinbori"
+  given-names: "Atsuki"
+  orcid: "https://orcid.org/0000-0002-6018-7431"
+
+title: "XmlToExcel"
+abstract: >
+  XmlToExcel is a software developed as part of the AMIDER project (https://amider.rois.ac.jp/). Please follow the license and cite the DOI when you use this software.
+doi: "10.5281/zenodo.15590207"
+url: "https://github.com/AMIDER-dev/XmlToExcel"
