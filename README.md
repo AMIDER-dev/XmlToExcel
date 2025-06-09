@@ -7,7 +7,7 @@ XML形式のツリー構造データをExcelテーブル形式へ変換する。
 
 - xml_to_excel.py: メインプログラム
 - module.py: サブモジュール
-- examplesフォルダ, examples.sh: 使用例
+- examples: 使用例。ISO Geographic MetaData (GMD) 準拠のXMLを使った例。
 
 ## 動作確認環境
 - python 3.10.11
