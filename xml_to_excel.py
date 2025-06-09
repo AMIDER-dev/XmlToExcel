@@ -81,16 +81,23 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
     data = data.astype('str')
     data.mask((data=='nan') | (data=='None'), None, inplace=True)
 
-    for col in cols_name:
-        names_new = []
-        prev = object()
-        for i,name in enumerate(data[col]):
-            if name == prev:
-                names_new += [None]
-            else:
-                names_new += [name.rsplit('_',1)[0]]
-                prev = name
-        data[col] = names_new
+    table_name = data[cols_name].to_numpy()
+    table_name_new = []
+    for i, list_name in enumerate(table_name):
+        if i==0:
+            list_name_new = [s.rsplit('_',1)[0] for s in list_name]
+        else:
+            list_name_new = []
+            for j, name in enumerate(list_name):
+                if j==0:
+                    name_new = None if name==table_name[i-1,j] else name.rsplit('_',1)[0]
+                else:
+                    name_new = None if table_name[i,j-1]==table_name[i-1,j-1] and name==table_name[i-1,j] else name.rsplit('_',1)[0]
+
+                list_name_new += [name_new]
+        table_name_new += [list_name_new]
+
+    data[cols_name] = table_name_new
 
     outfile = outdir + '/table.pkl'
     module.pickle_dump(data, outfile)
