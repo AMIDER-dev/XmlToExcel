@@ -24,7 +24,7 @@ XML形式のツリー構造データをExcelテーブル形式へ変換する。
 ### 要素名定義テーブル
 - examples/ElementDefine.xlsx
 
-データテーブルの要素名とサンプルXMLの各XPathの対応付けを定義する。要素名の階層構造はスラッシュ（/）で表し、子要素名のXPathの開始タグがサブツリーの起点となる。
+データテーブルの要素名とサンプルXMLの各XPathの対応付けを定義する。要素名の階層構造はスラッシュ（/）で表す。[ExcelToXml](https://github.com/AMIDER-dev/ExcelToXml)と同じものを使用できる。
 
 <table border="1" cellspacing="0" cellpadding="5">
   <thead style="background-color:#3f66a7; color:white;">
