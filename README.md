@@ -92,3 +92,7 @@ It also makes use of the following third-party libraries, each of which is distr
 - [flatten_dict](https://github.com/ianlini/flatten-dict) — MIT License  
 - [lxml](https://lxml.de/) — BSD-style License  
 - [pandas](https://pandas.pydata.org/) — BSD License
+
+## AMIDERプロジェクト
+- [分野横断型研究データベースAMIDER](https://amider.rois.ac.jp/)
+- 論文[AMIDER: A Multidisciplinary Research Database and Its Application to Promote Open Science](https://doi.org/10.5334/dsj-2025-007)
