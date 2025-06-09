@@ -3,7 +3,7 @@
 Please follow the license and cite the DOI when you use this software.
 
 # XmlToExcel
-XML形式のツリー構造データをExcelテーブル形式へ変換する。複数のXMLファイルをExcelテーブルへ統合できる。Convert tree-structure data in XML files to a unified Excel table. 
+XML形式のツリー構造データをExcelテーブル形式へ変換する。複数のXMLファイルをExcelテーブルへ統合できる。Convert multiple tree-structured datasets in XML files to a unified Excel table. 
 
 - xml_to_excel.py: メインプログラム
 - module.py: サブモジュール
