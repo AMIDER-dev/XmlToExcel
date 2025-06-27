@@ -3,6 +3,8 @@ import sys
 import fire
 import pandas as pd
 from lxml import etree
+from flatten_dict import flatten, unflatten
+from openpyxl.styles import Alignment
 import module
 
 def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
@@ -32,22 +34,23 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
     print('num of xmlfiles: ' + str(len(xmlfiles)))
 
     print('')
-    print('Read Element-Define Table')
+    print('Read Element-Define table')
 
-    dict_path = module.read_define(elem_table)
-    table_path = [l for l in module.dict_to_table(dict_path)]
-    table_name = [l[0] for l in table_path]
-    data_path = pd.DataFrame(table_name)
+    dict_path = module.read_define(elem_table, 'XPath')
+
+    table_path = [l for l in module.dict_to_table(dict_path, 'XPath')]
+    table_name_define = [l[0] for l in table_path]
+    data_path = pd.DataFrame(table_name_define)
     cols_name = list(data_path.columns)
-    nlevel = len(cols_name)
     data_path['XPath'] = [l[1] for l in table_path]
+    data_path = module.data_to_str(data_path)
 
     outfile = outdir + '/table_path.xlsx'
     data_path.to_excel(outfile, index=False)
     print('output: ' + outfile)
 
     print('')
-    print('Compile XML Values')
+    print('Compile XML values')
 
     n = 0
     for xmlfile in xmlfiles:
@@ -58,19 +61,18 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
         root = xml.getroot()
         ns = root.nsmap
 
-        table_xml = [l for l in module.read_xml(dict_path, root, ns)]
+        table_xml = [l for l in module.read_xml(dict_path, root, ns, 'XPath')]
 
         table_name = [l[0] for l in table_xml]
         data_xml = pd.DataFrame(table_name)
-        data_xml = data_xml.astype('str')
-        data_xml.mask((data_xml=='nan') | (data_xml=='None'), '', inplace=True)
+        data_xml = module.data_to_str(data_xml)
 
         data_xml[xmlfile0] = [l[1] for l in table_xml]
 
         if n>0:
-            data = pd.merge(data, data_xml, on = cols_name, how = 'outer')
+            data_merge = pd.merge(data_merge, data_xml, on = cols_name, how = 'outer')
         else:
-            data = data_xml
+            data_merge = data_xml
 
         n += 1
         if n%1000 == 0:
@@ -78,33 +80,61 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
             print('#' + str(n))
 
     print('')
-    data = data.astype('str')
-    data.mask((data=='nan') | (data=='None'), None, inplace=True)
+    data_merge = module.data_to_str(data_merge)
 
-    table_name = data[cols_name].to_numpy()
-    table_name_new = []
-    for i, list_name in enumerate(table_name):
-        if i==0:
-            list_name_new = [s.rsplit('_',1)[0] for s in list_name]
-        else:
-            list_name_new = []
-            for j, name in enumerate(list_name):
-                if j==0:
-                    name_new = None if name==table_name[i-1,j] else name.rsplit('_',1)[0]
-                else:
-                    name_new = None if table_name[i,j-1]==table_name[i-1,j-1] and name==table_name[i-1,j] else name.rsplit('_',1)[0]
+    print('')
+    print('Rearrange row order')
+    dict_flatten = {}
+    for i, row in data_merge.iterrows():
+        dict_flatten['/'.join([s for s in row[cols_name] if s!=''])] = row[[s for s in row.index if not s in cols_name]].tolist()
+    dict_data = unflatten(dict_flatten, splitter='path')
+    dict_data_sort = module.reorder_dict(dict_path, dict_data)
+    dict_flatten = flatten(dict_data_sort)
 
-                list_name_new += [name_new]
-        table_name_new += [list_name_new]
-
-    data[cols_name] = table_name_new
+    table_name = [[s for s in t] for t in dict_flatten.keys()]
+    list_val = [l for l in dict_flatten.values()]
+    data = pd.concat([pd.DataFrame(table_name), pd.DataFrame(list_val)], axis=1)
+    data.columns = data_merge.columns
+    data = module.data_to_str(data)
 
     outfile = outdir + '/table.pkl'
     module.pickle_dump(data, outfile)
     print('output: ' + outfile)
 
     outfile = outdir + '/table.xlsx'
-    data.to_excel(outfile, index=False)
+    if os.path.exists(outfile):
+        os.remove(outfile)
+
+    with pd.ExcelWriter(outfile, engine='openpyxl') as writer:
+        data.to_excel(writer, sheet_name='Sheet1', index=False)
+        ws = writer.sheets['Sheet1']
+
+        print('')
+        print('Merge Excel cells')
+        start_row = 2
+        end_row = start_row + len(data) - 1
+        dict_merge_v = {}
+        for col in range(1, len(cols_name) + 1):
+            dict_merge_v[col] = module.list_merge_vertical(ws, col, start_row, end_row)
+
+        dict_merge_h = module.dict_merge_horizontal(ws, start_row, end_row, 1, len(cols_name))
+
+        for col, list_merge in dict_merge_v.items():
+            for lim in list_merge:
+                ws.merge_cells(start_row = lim[0], start_column = col, end_row = lim[1], end_column = col)
+
+        for row, list_merge in dict_merge_h.items():
+            if len(list_merge) > 1:
+                ws.merge_cells(start_row = row, start_column = list_merge[0], end_row = row, end_column = list_merge[1])
+    
+        print('Remove temporary suffix in element names')
+        for row in range(start_row, end_row + 1):
+            for col in range(1, len(cols_name) + 1):
+                cell = ws.cell(row = row, column = col)
+                cell.alignment = Alignment(horizontal = 'left', vertical = 'center')
+                if isinstance(cell.value, str):
+                    cell.value = cell.value.rsplit('_', 1)[0]
+
     print('output: ' + outfile)
 
     print('Finished!')
