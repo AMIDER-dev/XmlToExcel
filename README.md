@@ -16,6 +16,7 @@ XML形式のツリー構造データをExcelテーブル形式へ変換する。
   - flatten_dict 0.4.2
   - lxml 4.9.2
   - pandas 2.0.2
+  - openpyxl 3.1.5
 
 ## 入力データ
 ### XMLファイル
@@ -24,7 +25,7 @@ XML形式のツリー構造データをExcelテーブル形式へ変換する。
 ### 要素名定義テーブル
 - examples/ElementDefine.xlsx
 
-データテーブルの要素名とサンプルXMLの各XPathの対応付けを定義する。要素名の階層構造はスラッシュ（/）で表す。[ExcelToXml](https://github.com/AMIDER-dev/ExcelToXml)と同じものを使用できる。
+データテーブルの要素名とサンプルXMLの各XPathの対応付けを定義する。要素名の階層構造はスラッシュ（/）で表す。出力データの行の並び順もこのテーブルに従う。[ExcelToXml](https://doi.org/10.5281/zenodo.15621697)と同じものを使用できる。
 
 <table border="1" cellspacing="0" cellpadding="5">
   <thead style="background-color:#3f66a7; color:white;">
@@ -92,6 +93,7 @@ It also makes use of the following third-party libraries, each of which is distr
 - [flatten_dict](https://github.com/ianlini/flatten-dict) — MIT License  
 - [lxml](https://lxml.de/) — BSD-style License  
 - [pandas](https://pandas.pydata.org/) — BSD License
+- [openpyxl](https://openpyxl.readthedocs.io/) — Licensed under the MIT License.  
 
 ## AMIDERプロジェクト
 - [分野横断型研究データベースAMIDER](https://amider.rois.ac.jp/)
