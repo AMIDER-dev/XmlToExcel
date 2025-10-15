@@ -19,7 +19,21 @@ def dict_to_table(current_dict, key_val, names=[], path=''):
                 continue
             yield from dict_to_table(child_dict, key_val, names + [child_name], path + child_dict[key_val])
 
-def read_xml(current_dict, current_node, ns, key_val, names=[]):
+def add_ns_pref(xpath, pref):
+    parts = xpath.split('/')
+    new_parts = []
+    for p in parts:
+        if not p:
+            new_parts.append('')
+        elif ':' in p:
+            new_parts.append(p)
+        elif p.startswith('@'):
+            new_parts.append(p)
+        else:
+            new_parts.append('{}:{}'.format(pref, p))
+    return '/'.join(new_parts)
+
+def read_xml(current_dict, current_node, ns, pref_default, key_val, names=[]):
     if len(current_dict.keys())==1:
         text = current_node.text
         yield [names, text]
@@ -29,12 +43,13 @@ def read_xml(current_dict, current_node, ns, key_val, names=[]):
                 continue
 
             xpath = child_dict[key_val]
+            xpath = add_ns_pref(xpath, pref_default)
             if len(names)>0:
                 xpath = '.' + xpath
             child_nodes = current_node.xpath(xpath, namespaces=ns)
 
             for i, child_node in enumerate(child_nodes):
-                yield from read_xml(child_dict, child_node, ns, key_val, names + [child_name + '_' + str(i)])
+                yield from read_xml(child_dict, child_node, ns, pref_default, key_val, names + [child_name + '_' + str(i)])
 
 def reorder_dict(template, target):
     if not isinstance(target, dict):
