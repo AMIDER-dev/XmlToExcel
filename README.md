@@ -94,7 +94,9 @@ It also makes use of the following third-party libraries, each of which is distr
 - [flatten_dict](https://github.com/ianlini/flatten-dict) — MIT License  
 - [lxml](https://lxml.de/) — BSD-style License  
 - [pandas](https://pandas.pydata.org/) — BSD License
-- [openpyxl](https://openpyxl.readthedocs.io/) — Licensed under the MIT License.  
+- [openpyxl](https://openpyxl.readthedocs.io/) — MIT License
+- [xmltodict](https://github.com/martinblech/xmltodict) — MIT License
+- [deepmerge](https://github.com/TehShrike/deepmerge) — MIT License
 
 ## AMIDERプロジェクト
 - [分野横断型研究データベースAMIDER](https://amider.rois.ac.jp/)
