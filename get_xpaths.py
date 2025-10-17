@@ -4,7 +4,7 @@ import pandas as pd
 import xmltodict
 from flatten_dict import unflatten
 from deepmerge import Merger
-import json
+import yaml
 
 def get_xpaths(xmldir, outname='xpaths_from_xml'):
     xmlfiles = list(Path(xmldir).rglob('*.xml'))
@@ -15,8 +15,8 @@ def get_xpaths(xmldir, outname='xpaths_from_xml'):
         xpaths_dict = get_xpaths_single(xmlfile)
         xpaths_merge = merger.merge(xpaths_merge, xpaths_dict)
 
-    with open('{}.json'.format(outname), 'w', encoding='utf-8') as f:
-        json.dump(xpaths_merge, f, ensure_ascii=False, indent=2)
+    with open('{}.yaml'.format(outname), 'w', encoding='utf-8') as f:
+        yaml.dump(xpaths_merge, f, allow_unicode=True, sort_keys=False)
 
     xpaths_list = flatten_keys(xpaths_merge)
     pd.Series(xpaths_list).to_excel('{}.xlsx'.format(outname), index=False, header=False)
