@@ -7,6 +7,7 @@ XML形式のツリー構造データをExcelテーブル形式へ変換する。
 
 - xml_to_excel.py: メインプログラム
 - module.py: サブモジュール
+- get_xpaths.py: 複数のXMLファイルから使用されているXPathを全て抽出するモジュール。メインプログラムの前処理でXPathをチェックするのに使用できる。
 - examples: 使用例。ISO Geographic MetaData (GMD) 準拠のXMLを使った例。
 
 ## 動作確認環境
@@ -25,7 +26,7 @@ XML形式のツリー構造データをExcelテーブル形式へ変換する。
 ### 要素名定義テーブル
 - examples/ElementDefine.xlsx
 
-データテーブルの要素名とサンプルXMLの各XPathの対応付けを定義する。要素名の階層構造はスラッシュ（/）で表す。出力データの行の並び順もこのテーブルに従う。[ExcelToXml](https://doi.org/10.5281/zenodo.15621697)と同じものを使用できる。
+データテーブルの要素名とサンプルXMLの各XPathの対応付けを定義する。要素名の階層構造はスラッシュ（/）で表す。出力データの行の並び順もこのテーブルに従う。[ExcelToXml](https://doi.org/10.5281/zenodo.15621697)と共通のファイルを使用できる。get_xpaths.pyによりXMLファイルからXPathを抽出して作ることもできる。
 
 <table border="1" cellspacing="0" cellpadding="5">
   <thead style="background-color:#3f66a7; color:white;">
