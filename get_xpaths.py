@@ -4,8 +4,9 @@ import pandas as pd
 import xmltodict
 from flatten_dict import unflatten
 from deepmerge import Merger
+import json
 
-def get_xpaths(xmldir):
+def get_xpaths(xmldir, outname='xpaths_from_xml'):
     xmlfiles = list(Path(xmldir).rglob('*.xml'))
     merger = Merger([(dict, ['merge'])], ['override'], ['override'])
 
@@ -14,10 +15,13 @@ def get_xpaths(xmldir):
         xpaths_dict = get_xpaths_single(xmlfile)
         xpaths_merge = merger.merge(xpaths_merge, xpaths_dict)
 
-    xpaths_list = flatten_keys(xpaths_merge)
-    pd.Series(xpaths_list).to_excel('xpaths_from_xml.xlsx', index=False, header=False)
+    with open('{}.json'.format(outname), 'w', encoding='utf-8') as f:
+        json.dump(xpaths_merge, f, ensure_ascii=False, indent=2)
 
-    return xpaths_list
+    xpaths_list = flatten_keys(xpaths_merge)
+    pd.Series(xpaths_list).to_excel('{}.xlsx'.format(outname), index=False, header=False)
+
+    return xpaths_merge
 
 def get_xpaths_single(xmlfile):
     xpaths = []
@@ -25,7 +29,7 @@ def get_xpaths_single(xmlfile):
         data = xmltodict.parse(f.read())
         xpaths = flatten_keys(data)
         xpaths_unique = list(dict.fromkeys(xpaths))
-        xpaths_dict = unflatten({tuple(p.split('/')): {} for p in xpaths_unique})
+        xpaths_dict = unflatten({tuple(p.split('/')): "" for p in xpaths_unique})
     return xpaths_dict
 
 def flatten_keys(d, parent_key='', sep='/'):
