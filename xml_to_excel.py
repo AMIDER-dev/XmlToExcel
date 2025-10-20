@@ -54,6 +54,7 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
 
     n = 0
     pref_default = '_ns'
+    data_merge = pd.DataFrame()
     for xmlfile in xmlfiles:
         xmlfile0 = xmlfile.split('/')[-1]
         print(xmlfile0, end=' ', flush=True)
@@ -75,7 +76,13 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
                 data_xml[col] = None
         data_xml = module.data_to_str(data_xml)
 
-        data_xml[xmlfile0] = [l[1] for l in table_xml]
+        col = xmlfile0
+        i = 0
+        while col in data_merge.columns:
+            i += 1
+            col = '{}.{}'.format(xmlfile0, i)
+        data_xml[col] = [l[1] for l in table_xml]
+
         if n>0:
             data_merge = pd.merge(data_merge, data_xml, on = cols_name, how = 'outer')
         else:
