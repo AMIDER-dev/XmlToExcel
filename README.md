@@ -67,7 +67,7 @@ XML形式のツリー構造データをExcelテーブル形式へ変換する。
 ## 出力
 - examples/output/table.xlsx: 要素名定義テーブルに従いExcelテーブル形式へ変換したXMLデータ。カラム名はxmlファイル名だが、異なるディレクトリに同じ名前のxmlファイルがあった場合、カラム名では1,2,...とpostfixを追加して区別する。
 - examples/output/table.pkl: Excel化する前のPython PandasデータをPickleで保存したもの
-- examples/output/table_path.xlsx: 要素名定義テーブルを処理の際に整形したものをExcelで保存したもの
+- examples/output/table_path.xlsx: 要素名定義テーブルを処理の際に整形したものをテーブル化しExcelで保存したもの。チェック用のもので処理には使用されない。
 
 ## ヘルプ表示
 bashで
