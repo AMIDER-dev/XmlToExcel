@@ -42,12 +42,18 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
     table_name_define = [l[0] for l in table_path]
     data_path = pd.DataFrame(table_name_define)
     cols_name = list(data_path.columns)
-    data_path['XPath'] = [l[1] for l in table_path]
+
+    data_tmp = pd.DataFrame([l[1] for l in table_path])
+    data_path = pd.concat([data_path, data_tmp], axis=1)
+    data_path.columns = range(len(data_path.columns))
     data_path = module.data_to_str(data_path)
 
+    outfile = outdir + '/table_path.pkl'
+    module.pickle_dump(data_path, outfile)
+    print(outfile)
     outfile = outdir + '/table_path.xlsx'
     data_path.to_excel(outfile, index=False)
-    print('output: ' + outfile)
+    print(outfile)
 
     print('')
     print('Compile XML values')

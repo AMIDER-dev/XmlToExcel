@@ -5,19 +5,20 @@ from flatten_dict import unflatten
 
 def read_define(excelfile, key_val):
     data_define = pd.ExcelFile(excelfile).parse(index_col=0)
+    data_define = data_define.loc[data_define.index.notna()]
     data_define.index = [s + '/' + key_val for s in data_define.index]
     dict_tmp = data_define.to_dict('dict')
     dict_path = unflatten(dict_tmp[key_val], splitter='path')
     return dict_path
 
-def dict_to_table(current_dict, key_val, names=[], path=''):
+def dict_to_table(current_dict, key_val, names=[], paths=[]):
     if len(current_dict.keys())==1:
-        yield [names, path]
+        yield [names, paths]
     else:
         for child_name, child_dict in current_dict.items():
             if child_name==key_val:
                 continue
-            yield from dict_to_table(child_dict, key_val, names + [child_name], path + child_dict[key_val])
+            yield from dict_to_table(child_dict, key_val, names + [child_name], paths + [child_dict[key_val]])
 
 def add_ns_pref(xpath, pref):
     parts = xpath.split('/')
