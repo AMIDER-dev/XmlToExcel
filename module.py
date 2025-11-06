@@ -1,3 +1,4 @@
+import re
 import warnings
 import pandas as pd
 import pickle
@@ -28,7 +29,7 @@ def add_ns_pref(xpath, pref):
             new_parts.append('')
         elif ':' in p:
             new_parts.append(p)
-        elif p.startswith('@'):
+        elif p.startswith('@') or p.strip() == '(':
             new_parts.append(p)
         else:
             new_parts.append('{}:{}'.format(pref, p))
