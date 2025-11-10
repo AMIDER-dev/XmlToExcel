@@ -13,7 +13,7 @@ def read_define(excelfile, key_val):
     return dict_path
 
 def dict_to_table(current_dict, key_val, names=[], paths=[]):
-    if len(current_dict.keys())==1:
+    if len(current_dict.keys())==1 and list(current_dict.keys())[0]==key_val:
         yield [names, paths]
     else:
         for child_name, child_dict in current_dict.items():
