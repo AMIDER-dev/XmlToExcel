@@ -8,6 +8,8 @@ XML形式のツリー構造データをExcelテーブル形式へ変換する。
 - xml_to_excel.py: メインプログラム
 - module.py: サブモジュール
 - get_xpaths.py: 複数のXMLファイルから使用されているXPathを全て抽出するモジュール。メインプログラムの前処理でXPathをチェックするのに使用できる。
+- arrange_directory.py: XMLファイルの中にコンテンツのIDとしてURIがある場合、それを読み取ってURIに従ってディレクトリ構造を作りXMLファイルをコピーする。
+- replace_element.py: エクセルファイルの置換テーブルに従ってXMLの特定の要素の値を置換する。
 - examples: 使用例。ISO Geographic MetaData (GMD) 準拠のXMLを使った例。
 
 ## 動作確認環境
