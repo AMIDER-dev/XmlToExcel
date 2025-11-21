@@ -30,7 +30,7 @@ XML形式のツリー構造データをExcelテーブル形式へ変換する。
 ### 要素名定義テーブル
 - examples/ElementDefine.xlsx
 
-データテーブルの要素名とサンプルXMLの各XPathの対応付けを定義する。要素名の階層構造はスラッシュ（/）で表す。出力データの行の並び順もこのテーブルに従う。ORで複数のパスのパターンを指定する場合はXPathのルールとして"/root/a/c/d | /root/b/c/d"などと"|"で区切る。[ExcelToXml](https://doi.org/10.5281/zenodo.15621697)と共通のファイルを使用できる。get_xpaths.pyによりXMLファイルからXPathを抽出して作ることもできる。
+データテーブルの要素名とXMLの各XPathの対応付けを定義する。要素名の階層構造はスラッシュ（/）で表す。出力データの行の並び順もこのテーブルに従う。ORで複数のパスのパターンを指定する場合はXPathのルールとして"/root/a/c/d | /root/b/c/d"などと"|"で区切る。[ExcelToXml](https://doi.org/10.5281/zenodo.15621697)と共通のファイルを使用できる。get_xpaths.pyによりXMLファイルからXPathを抽出して作ることもできる。
 
 <table border="1" cellspacing="0" cellpadding="5">
   <thead style="background-color:#3f66a7; color:white;">
