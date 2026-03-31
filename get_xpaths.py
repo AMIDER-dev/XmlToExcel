@@ -2,26 +2,34 @@ import fire
 from pathlib import Path
 import pandas as pd
 import xmltodict
-from flatten_dict import unflatten
-from deepmerge import Merger
 import yaml
 
-def get_xpaths(xmldir, outname='xpaths_from_xml'):
-    xmlfiles = list(Path(xmldir).rglob('*.xml'))
-    merger = Merger([(dict, ['merge'])], ['override'], ['override'])
+def get_xpaths(*xmldirs, outname='xpaths_from_xml', printfile=False):
+    xmlfiles = []
+    for d in xmldirs:
+        files = sorted(Path(d).rglob('*.xml'))
+        xmlfiles.extend(files)
+    
+    seen = set()
+    xpaths_merge = []
 
-    xpaths_merge = {}
     for xmlfile in xmlfiles:
-        xpaths_dict = get_xpaths_single(xmlfile)
-        xpaths_merge = merger.merge(xpaths_merge, xpaths_dict)
+        if printfile:
+            print(xmlfile)
 
-    with open('{}.yaml'.format(outname), 'w', encoding='utf-8') as f:
-        yaml.dump(xpaths_merge, f, allow_unicode=True, sort_keys=False)
+        xpaths = get_xpaths_single(xmlfile)
+        for p in xpaths:
+            if p not in seen:
+                seen.add(p)
+                xpaths_merge.append(p)
 
-    xpaths_list = flatten_keys(xpaths_merge)
-    pd.Series(xpaths_list).to_excel('{}.xlsx'.format(outname), index=False, header=False)
+    pd.Series(xpaths_merge).to_excel(f'{outname}.xlsx', index=False, header=False)
 
-    return xpaths_merge
+    tree = build_tree(xpaths_merge)
+    with open(f'{outname}.yaml', 'w', encoding='utf-8') as f:
+        yaml.dump(tree, f, allow_unicode=True, sort_keys=False)
+
+    return tree
 
 def get_xpaths_single(xmlfile):
     xpaths = []
@@ -29,8 +37,7 @@ def get_xpaths_single(xmlfile):
         data = xmltodict.parse(f.read())
         xpaths = flatten_keys(data)
         xpaths_unique = list(dict.fromkeys(xpaths))
-        xpaths_dict = unflatten({tuple(p.split('/')): "" for p in xpaths_unique})
-    return xpaths_dict
+    return xpaths_unique
 
 def flatten_keys(d, parent_key='', sep='/'):
     keys = []
@@ -44,6 +51,21 @@ def flatten_keys(d, parent_key='', sep='/'):
     else:
         keys.append(parent_key)
     return keys
+
+def build_tree(paths, sep='/'):
+    tree = {}
+    for p in paths:
+        keys = p.split(sep)
+        d = tree
+
+        for k in keys:
+            if k not in d:
+                d[k] = {}
+            elif not isinstance(d[k], dict):
+                d[k] = {}
+
+            d = d[k]
+    return tree
 
 if __name__ == "__main__":
     fire.Fire(get_xpaths)
