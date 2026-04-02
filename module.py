@@ -35,16 +35,44 @@ def add_ns_pref(xpath, pref):
             new_parts.append('{}:{}'.format(pref, p))
     return '/'.join(new_parts)
 
+def _localname(tag):
+    return re.sub(r'\{[^}]*\}', '', tag)
+
+def _collect_all(node, names):
+    children = list(node)
+    if not children:
+        text = (node.text or '').strip()
+        if text:
+            yield [names, node.text]
+    else:
+        for i, child in enumerate(children):
+            yield from _collect_all(child, names + [_localname(child.tag) + '_' + str(i)])
+
+def _direct_child_localname(xpath, is_root_call):
+    parts = [p for p in xpath.replace('./', '/').split('/') if p]
+    idx = 1 if is_root_call else 0
+    if idx >= len(parts):
+        return None
+    tag = re.sub(r'\[.*', '', parts[idx])
+    return tag.split(':', 1)[1] if ':' in tag else tag
+
 def read_xml(current_dict, current_node, ns, pref_default, key_val, names=[]):
     if len(current_dict.keys())==1:
         text = current_node.text
         yield [names, text]
     else:
+        is_root_call = (len(names) == 0)
+        matched_tags = set()
+
         for child_name, child_dict in current_dict.items():
             if child_name==key_val:
                 continue
 
             xpath = child_dict[key_val]
+            tag = _direct_child_localname(xpath, is_root_call)
+            if tag:
+                matched_tags.add(tag)
+
             xpath = add_ns_pref(xpath, pref_default)
             if len(names)>0:
                 xpath = '.' + xpath
@@ -53,17 +81,29 @@ def read_xml(current_dict, current_node, ns, pref_default, key_val, names=[]):
             for i, child_node in enumerate(child_nodes):
                 yield from read_xml(child_dict, child_node, ns, pref_default, key_val, names + [child_name + '_' + str(i)])
 
+        for i, child in enumerate(current_node):
+            if _localname(child.tag) not in matched_tags:
+                child_name = _localname(child.tag) + '_' + str(i)
+                for row in _collect_all(child, names + [child_name]):
+                    yield row
+
 def reorder_dict(template, target):
     if not isinstance(target, dict):
         return target
 
     result = {}
+    matched_keys = set()
+
     for key in template:
         keys_target = [k for k in target if k.startswith(key)]
         for key_target in sorted(keys_target):
-            child_template = template[key]
-            child_target = target[key_target]
-            result[key_target] = reorder_dict(child_template, child_target)
+            matched_keys.add(key_target)
+            result[key_target] = reorder_dict(template[key], target[key_target])
+
+    for key in target:
+        if key not in matched_keys:
+            result[key] = target[key]
+
     return result
 
 def list_merge_vertical(ws, col, start_row, end_row):

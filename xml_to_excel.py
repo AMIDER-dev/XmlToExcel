@@ -4,6 +4,7 @@ import sys
 import fire
 import pandas as pd
 from lxml import etree
+import sqlite3
 from flatten_dict import flatten, unflatten
 from openpyxl.styles import Alignment
 import module
@@ -58,11 +59,22 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
     print('')
     print('Compile XML values')
 
-    n = 0
     pref_default = '_ns'
-    data_merge = pd.DataFrame()
+    xmlfile_cols = []
+    db_path = outdir + '/tmp_merge.db'
+    if os.path.exists(db_path):
+        os.remove(db_path)
+    con = sqlite3.connect(db_path)
+
     for xmlfile in xmlfiles:
         xmlfile0 = xmlfile.split('/')[-1]
+        col = xmlfile0
+        i = 0
+        while col in xmlfile_cols:
+            i += 1
+            col = '{}.{}'.format(xmlfile0, i)
+        xmlfile_cols.append(col)
+
         print(xmlfile0, end=' ', flush=True)
 
         xml = etree.parse(xmlfile)
@@ -77,29 +89,38 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
 
         table_name = [l[0] for l in table_xml]
         data_xml = pd.DataFrame(table_name)
-        for col in cols_name:
-            if col not in data_xml.columns:
-                data_xml[col] = None
+        for c in cols_name:
+            if c not in data_xml.columns:
+                data_xml[c] = None
+        data_xml = data_xml[cols_name]
         data_xml = module.data_to_str(data_xml)
+        data_xml.columns = [str(c) for c in data_xml.columns]
+        data_xml['_value'] = [l[1] for l in table_xml]
+        data_xml['_file'] = col
 
-        col = xmlfile0
-        i = 0
-        while col in data_merge.columns:
-            i += 1
-            col = '{}.{}'.format(xmlfile0, i)
-        data_xml[col] = [l[1] for l in table_xml]
+        data_xml.to_sql('records', con, if_exists='append', index=False)
 
-        if n>0:
-            data_merge = pd.merge(data_merge, data_xml, on = cols_name, how = 'outer')
-        else:
-            data_merge = data_xml
-
-        n += 1
-        if n%1000 == 0:
+        if len(xmlfile_cols) % 1000 == 0:
             print('')
-            print('#' + str(n))
+            print('#' + str(len(xmlfile_cols)))
 
     print('')
+
+    # SQLiteからpivot
+    cols_name_str = [str(c) for c in cols_name]
+    key_cols = ', '.join(f'"{c}"' for c in cols_name_str)
+    data_long = pd.read_sql('SELECT * FROM records WHERE _value IS NOT NULL AND _value != ""', con)
+    con.close()
+    os.remove(db_path)
+
+    data_merge = data_long.pivot_table(
+        index=cols_name_str,
+        columns='_file',
+        values='_value',
+        aggfunc='first'
+    ).reset_index()
+    data_merge.columns.name = None
+    data_merge.columns = [int(c) if c in cols_name_str else c for c in data_merge.columns]
     data_merge = module.data_to_str(data_merge)
 
     print('')
@@ -110,6 +131,12 @@ def xml_to_excel(elem_table: str, xmldir: str, outdir: str='./'):
     dict_data = unflatten(dict_flatten, splitter='path')
     dict_data_sort = module.reorder_dict(dict_path, dict_data)
     dict_flatten = flatten(dict_data_sort)
+
+    n_cols = len(cols_name)
+    dict_flatten = {
+        (k[:n_cols - 1] + ('/'.join(k[n_cols - 1:]),) if len(k) > n_cols else k): v
+        for k, v in dict_flatten.items()
+    }
 
     table_name = [[s for s in t] for t in dict_flatten.keys()]
     data_name = pd.DataFrame(table_name)
